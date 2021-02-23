@@ -1,9 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <!-- Nav bar -->
+    <header class="navbar mx-2 mt-2">
+      <section class="navbar-section">
+        <router-link to="/" class="navbar-brand">Coloc</router-link>
+        <!-- <router-link to="/about" class="btn btn-link">Docs</router-link> -->
+      </section>
+      <section class="navbar-section">
+        <router-link to="/login" class="btn btn-primary mr-2"
+          >Login</router-link
+        >
+        <router-link to="/register" class="btn">Register</router-link>
+      </section>
+    </header>
+
+    <!-- content -->
     <router-view />
   </div>
 </template>
