@@ -36,6 +36,10 @@
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^1.19.1",
     "typescript": "~3.9.3",
-    "vue-template-compiler": "^2.6.11"
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "vuex-class": "^0.3.2",
+    "vuex-module-decorators": "^1.0.1"
   }
 }

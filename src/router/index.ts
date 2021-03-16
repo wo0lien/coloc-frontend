@@ -39,6 +39,13 @@ const routes: Array<RouteConfig> = [
     component: () => import("../views/Dashboard.vue"),
     meta: { requireAuth: true },
   },
+  {
+    path: "/shoplists",
+    name: "Shoplists",
+
+    component: () => import("../views/Shoplists.vue"),
+    meta: { requireAuth: true },
+  },
 ];
 
 const router = new VueRouter({

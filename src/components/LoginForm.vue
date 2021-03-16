@@ -37,7 +37,7 @@
         <div class="column col-2 hide-sm d-block"></div>
         <div class="column col-2 col-sm-12">
           <button class="btn btn-left" @click="submitForm">
-            Create account
+            Log In
           </button>
         </div>
         <div class="column col-6 col-sm-12 col-mx-auto text-left pt-2">
