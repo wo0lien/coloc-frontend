@@ -8,14 +8,12 @@ class Shoplists extends VuexModule {
 
   @Mutation
   public SET_SHOPLIST_NAME(index: number): void {
-    console.log("Renaming");
     this.shoplists[index].name = `newS${index + 1}`;
   }
 
   @Mutation
   public DELETE_SHOPLIST(index: number): void {
     this.shoplists.splice(index, 1);
-    console.log(this.shoplists);
   }
 
   @Mutation
@@ -28,7 +26,6 @@ class Shoplists extends VuexModule {
     axios
       .get("http://localhost:3030/shoplists", config)
       .then(response => {
-        console.log(response);
         this.shoplists = response.data.data;
       })
       .catch(err => {

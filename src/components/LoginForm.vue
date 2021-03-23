@@ -53,48 +53,41 @@
 
 <script lang="ts">
 import { AxiosError, AxiosResponse } from "axios";
-import Vue from "vue";
+import { Component, Vue } from "vue-property-decorator";
 
-interface State {
-  password: string;
-  email: string;
-}
+@Component
+export default class LoginForm extends Vue {
+  private password = "";
+  private email = "";
 
-export default Vue.extend({
-  name: "LoginForm",
-  data: (): State => {
-    return { password: "", email: "" };
-  },
-  methods: {
-    submitForm(e: Event): void {
-      e.preventDefault();
-      if (this.password.length > 0) {
-        this.$http
-          .post("http://localhost:3030/authentication", {
-            strategy: "local",
-            email: this.email,
-            password: this.password,
-          })
-          .then((response: AxiosResponse) => {
-            console.log(response.data.accessToken);
-            window.localStorage.setItem("jwt", response.data.accessToken);
+  submitForm(e: Event): void {
+    e.preventDefault();
+    if (this.password.length > 0) {
+      this.$http
+        .post("http://localhost:3030/authentication", {
+          strategy: "local",
+          email: this.email,
+          password: this.password,
+        })
+        .then((response: AxiosResponse) => {
+          window.localStorage.setItem("jwt", response.data.accessToken);
+          window.localStorage.setItem("userId", response.data.user.id);
 
-            if (window.localStorage.getItem("jwt") != null) {
-              this.$emit("loggedIn");
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl);
-              } else {
-                this.$router.push({ name: "Dashboard" });
-              }
+          if (window.localStorage.getItem("jwt") != null) {
+            this.$emit("loggedIn");
+            if (this.$route.params.nextUrl != null) {
+              this.$router.push(this.$route.params.nextUrl);
             } else {
-              this.$router.push({ name: "Home" });
+              this.$router.push({ name: "Dashboard" });
             }
-          })
-          .catch((error: AxiosError) => {
-            console.error(error.response);
-          });
-      }
-    },
-  },
-});
+          } else {
+            this.$router.push({ name: "Home" });
+          }
+        })
+        .catch((error: AxiosError) => {
+          console.error(error.response);
+        });
+    }
+  }
+}
 </script>

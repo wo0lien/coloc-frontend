@@ -29,7 +29,6 @@ class Notifications extends VuexModule {
   @Mutation
   public DELETE_NOTIFICATION(index: number): void {
     this.notifications.splice(index, 1);
-    console.log(this.notifications);
   }
 
   @Action({ rawError: true, commit: "DELETE_NOTIFICATION" })

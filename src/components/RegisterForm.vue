@@ -143,11 +143,10 @@ export default Vue.extend({
             lastname: this.lastname,
             email: this.email,
             room: this.room,
-
             password: this.password,
           })
           .then((response: AxiosResponse) => {
-            console.log(response.data);
+            console.log(response);
             this.$router.push({ name: "Login" });
           })
           .catch((error: AxiosError) => {
