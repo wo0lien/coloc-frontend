@@ -37,9 +37,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { namespace } from "vuex-class";
-import NotificationModel from "@/models/notification.model";
-const notifications = namespace("Notifications");
+import { getModule } from "vuex-module-decorators";
+import notificationModule from "@/store/modules/notifications";
+const notificationsState = getModule(notificationModule);
+
 @Component
 export default class Notification extends Vue {
   @Prop({ required: true }) title!: string;
@@ -47,11 +48,8 @@ export default class Notification extends Vue {
   @Prop({ required: true }) index!: number;
   @Prop({ required: true }) type!: string;
 
-  // Vuex
-  @notifications.State
-  public notifications!: Array<NotificationModel>;
-
-  @notifications.Action
-  public deleteNotification!: (index: number) => {};
+  deleteNotification() {
+    notificationsState.deleteNotification(this.index);
+  }
 }
 </script>

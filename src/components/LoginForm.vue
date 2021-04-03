@@ -63,7 +63,7 @@ export default class LoginForm extends Vue {
   submitForm(e: Event): void {
     e.preventDefault();
     if (this.password.length > 0) {
-      this.$http
+      this.$axios
         .post("http://localhost:3030/authentication", {
           strategy: "local",
           email: this.email,

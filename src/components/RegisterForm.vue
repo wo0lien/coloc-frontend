@@ -137,7 +137,7 @@ export default Vue.extend({
       e.preventDefault();
       // TODO verif mail, name etc
       if (this.passwordConfirm == this.password) {
-        this.$http
+        this.$axios
           .post("http://localhost:3030/users", {
             firstname: this.firstname,
             lastname: this.lastname,

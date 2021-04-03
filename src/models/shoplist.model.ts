@@ -10,5 +10,6 @@ export default class ShoplistModel {
   createdAt: Date | null = null;
   updatedAt: Date | null = null;
   owner: any = {};
-  joiners: any = {};
+  joiners: any = [];
+  products: any = [];
 }

@@ -42,11 +42,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { getModule } from "vuex-module-decorators";
+import ShoplistsModule from "@/store/modules/shoplists";
 import ShoplistModel from "@/models/shoplist.model";
 import UserModel from "@/models/user.model";
-const shoplists = namespace("Shoplists");
-const users = namespace("Users");
+const shoplistsState = getModule(ShoplistsModule);
+
 @Component
 export default class ShoplistCard extends Vue {
   // Data
@@ -58,21 +59,10 @@ export default class ShoplistCard extends Vue {
   @Prop({ required: true }) index!: number;
   @Prop({ required: true }) type!: string;
 
-  // Vuex
-  @shoplists.State
-  public shoplists!: Array<ShoplistModel>;
-
-  @users.State
-  public users!: Array<UserModel>;
-
-  @shoplists.Action
-  public deleteShoplist!: (index: number) => number;
-
   mounted() {
     const userId = window.localStorage.getItem("userId");
-    const sl = this.shoplists.find(s => {
-      return s.id == this.index;
-    });
+    const sl = shoplistsState.shoplists[this.index];
+
     if (sl) {
       this.shoplist = sl;
       this.owner = this.shoplist.owner;

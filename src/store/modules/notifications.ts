@@ -1,7 +1,13 @@
 import { VuexModule, Module, Mutation, Action } from "vuex-module-decorators";
 import NotificationModel from "@/models/notification.model";
+import Store from "../index";
 
-@Module({ namespaced: true, name: "Notifications" })
+@Module({
+  dynamic: true,
+  store: Store,
+  namespaced: true,
+  name: "Notifications",
+})
 class Notifications extends VuexModule {
   public notifications: Array<NotificationModel> = [
     {

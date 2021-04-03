@@ -1,8 +1,9 @@
 import { VuexModule, Module, Mutation, Action } from "vuex-module-decorators";
 import UserModel from "@/models/user.model.ts";
 import axios from "axios";
+import Store from "../index";
 
-@Module({ namespaced: true, name: "Users" })
+@Module({ dynamic: true, store: Store, namespaced: true, name: "Users" })
 class Users extends VuexModule {
   public users: Array<UserModel> = [];
 

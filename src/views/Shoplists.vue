@@ -24,10 +24,14 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { getModule } from "vuex-module-decorators";
 import ShoplistCard from "@/components/ShoplistCard.vue";
 import ShoplistModel from "@/models/shoplist.model";
-const shoplists = namespace("Shoplists");
+import shoplistModule from "@/store/modules/shoplists";
+import store from "@/store/index";
+
+const shoplistsState = getModule(shoplistModule);
+
 @Component({
   components: {
     ShoplistCard,
@@ -39,24 +43,24 @@ export default class Shoplists extends Vue {
   private joinedShoplists: Array<ShoplistModel> = [];
   private otherShoplists: Array<ShoplistModel> = [];
 
-  //Vuex
-  @shoplists.State
-  public shoplists!: Array<ShoplistModel>;
-
-  @shoplists.Action
-  public getShoplists!: () => {};
-
   mounted() {
-    this.getShoplists();
+    shoplistsState.getShoplists();
   }
 
-  @Watch("shoplists")
+  @Watch("this.$store")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onPropertyChange(shoplists: any) {
-    const userId = window.localStorage.getItem("userId");
-    console.log(userId);
+  onPropertyChange() {
+    console.log("inside watcher");
+    const uid = window.localStorage.getItem("userId");
+    let userId: number;
+    if (uid) {
+      userId = parseInt(uid);
+    } else {
+      // TODO handle errors
+      userId = 1;
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    shoplists.map((shoplist: any) => {
+    shoplistsState.shoplists.map((shoplist: any) => {
       if (shoplist.ownerId == userId) {
         // code
         this.ownedShoplists.push(shoplist);

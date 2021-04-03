@@ -1,14 +1,29 @@
 import { VuexModule, Module, Mutation, Action } from "vuex-module-decorators";
 import ShoplistModel from "@/models/shoplist.model.ts";
 import axios from "axios";
+import Store from "../index";
 
-@Module({ namespaced: true, name: "Shoplists" })
+const config: any = {
+  headers: {
+    Authorization: `Bearer ${window.localStorage.getItem("jwt")}`,
+  },
+};
+
+@Module({ dynamic: true, store: Store, namespaced: true, name: "Shoplists" })
 class Shoplists extends VuexModule {
   public shoplists: Array<ShoplistModel> = [];
 
+  @Mutation SET_SHOPLISTS(data: Array<ShoplistModel>): void {
+    this.shoplists = data;
+  }
+
   @Mutation
-  public SET_SHOPLIST_NAME(index: number): void {
-    this.shoplists[index].name = `newS${index + 1}`;
+  public UPDATE_SHOPLIST<K extends keyof ShoplistModel>(data: {
+    index: number;
+    key: K;
+    data: ShoplistModel[K];
+  }): void {
+    this.shoplists[data.index][data.key] = data.data;
   }
 
   @Mutation
@@ -16,36 +31,69 @@ class Shoplists extends VuexModule {
     this.shoplists.splice(index, 1);
   }
 
-  @Mutation
-  public GET_SHOPLISTS(): void {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${window.localStorage.getItem("jwt")}`,
-      },
-    };
+  @Action({ rawError: true, commit: "SET_SHOPLISTS" })
+  public getShoplists(): Array<ShoplistModel> {
+    console.log("inside getShoplists()");
     axios
       .get("http://localhost:3030/shoplists", config)
       .then(response => {
-        this.shoplists = response.data.data;
+        return response.data.data;
       })
       .catch(err => {
         console.log(err);
       });
+    return [];
   }
 
-  @Action({ rawError: true, commit: "SET_SHOPLIST_NAME" })
-  public updateName(index: number): number {
-    return index;
+  @Action({ rawError: true })
+  public updateShoplist<K extends keyof ShoplistModel>(
+    id: number,
+    key: K,
+    data: ShoplistModel[K],
+  ): any {
+    // getting index from id
+    const index: number = this.shoplists.findIndex(shoplist => {
+      return shoplist.id == id;
+    });
+
+    if (index != -1) {
+      // Pushing to API
+      config.body = data;
+      axios
+        .patch(`http://localhost:3030/shoplists/${id}`, config)
+        .then(response => {
+          this.context.commit("UPDATE_SHOPLIST", {
+            index: index,
+            key: key,
+            data: response.data.data[key],
+          });
+        })
+        .catch(() => {
+          // Emit notification on error
+          console.log("Axios error");
+        });
+    }
   }
 
-  @Action({ rawError: true, commit: "DELETE_SHOPLIST" })
-  public deleteShoplist(index: number): number {
-    return index;
-  }
+  @Action({ rawError: true })
+  public deleteShoplist(id: number): any {
+    // getting index from id
+    const index: number = this.shoplists.findIndex(shoplist => {
+      return shoplist.id == id;
+    });
 
-  @Action({ rawError: true, commit: "GET_SHOPLISTS" })
-  public getShoplists(): void {
-    return;
+    if (index != -1) {
+      axios
+        .delete(`http://localhost:3030/shoplists/${id}`, config)
+        .then(() => {
+          this.context.commit("DELETE_SHOPLIST", {
+            index,
+          });
+        })
+        .catch(() => {
+          console.log("Axios error");
+        });
+    }
   }
 }
 

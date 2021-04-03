@@ -10,11 +10,11 @@ import "./../node_modules/spectre.css/dist/spectre-exp.min.css";
 import "./../node_modules/spectre.css/dist/spectre-icons.min.css";
 
 // Making Axios accessible from everywhere
-Vue.prototype.$http = axios;
+Vue.prototype.$axios = axios;
 
 declare module "vue/types/vue" {
   interface Vue {
-    $http: AxiosInstance;
+    $axios: AxiosInstance;
   }
 }
 
